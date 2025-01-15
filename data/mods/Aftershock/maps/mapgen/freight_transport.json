@@ -1,0 +1,117 @@
+[
+  {
+    "type": "mapgen",
+    "method": "json",
+    "om_terrain": [ [ "afs_freight_transport_a1", "afs_freight_transport_a2" ] ],
+    "object": {
+      "fill_ter": "t_metal_floor",
+      "rows": [
+        "                                                ",
+        "                                                ",
+        "                                                ",
+        "                                                ",
+        "       ñññññññññññ                              ",
+        "       -)-)-  -))-   ññññññ      ñññññññ        ",
+        "     ---Foj----II--- -)- --!--   -))-))-        ",
+        "   ---yh...U-LL..qq---I---...-----ä.â.ä--       ",
+        "   #.#yh.,ss-E...,.....q-l...l-éé-ä.,.ä----     ",
+        "   ---á.....!..f-)---..q-l...l-..---1---hc)     ",
+        "     --!--ee-,h❺)ê!.1,..!..,..-....5..!.,c)     ",
+        "   ---S.S----..f-)---7.q-l....!....,..--hc)     ",
+        "   #.#.,.-OP-E...,.....q-l....-6f4....f----     ",
+        "   ---SS.!,❸-LL..qq---I---...-----fL.fE--       ",
+        "     ---W-~----II--- -)- --!--   -))-))-        ",
+        "       -)-)-  -))-   ññññññ      ñññññññ        ",
+        "       ñññññññññññ                              ",
+        "                                                ",
+        "                                                ",
+        "                                                ",
+        "                                                ",
+        "                                                ",
+        "                                                ",
+        "                                                "
+      ],
+      "palettes": [
+        "afs_habitat_structure",
+        "afs_habitat_mech_furnishing",
+        "afs_habitat_residential_furnishing",
+        "afs_habitat_life_support"
+      ],
+      "terrain": { "ñ": "t_afs_broken_treads", "1": "t_door_metal_locked", "ê": "t_nuclear_reactor" },
+      "furniture": {
+        "I": "f_sealed_intermodal_crate",
+        "4": "f_monomolecularsaw",
+        "6": "f_3dprinter",
+        "é": "f_drone_recharge_station",
+        "â": "f_exo_gantry",
+        "ä": "f_rack",
+        "á": "f_bookcase"
+      },
+      "place_item": [ { "item": "television", "repeat": 1, "x": 10, "y": 10 } ],
+      "items": {
+        "ê": { "item": "nuclear_reactor" },
+        "é": { "item": "old_industrial_bot_storage", "chance": 20 },
+        "â": { "item": "afs_exosuit_worker", "chance": 60 },
+        "ä": { "item": "afs_civilian_armory", "chance": 80, "repeat": [ 1, 3 ] },
+        "I": { "item": "afs_crate_civ_rand" },
+        "á": { "item": "homebooks", "repeat": [ 2, 3 ] }
+      },
+      "place_monster": [
+        { "group": "AFS_GROUP_ROBOT_LOW_RISK", "x": [ 7, 23 ], "y": [ 7, 13 ], "pack_size": [ 1, 4 ], "chance": 40 },
+        { "group": "AFS_GROUP_RUIN_MOXIE", "x": [ 0, 23 ], "y": [ 0, 3 ], "pack_size": [ 1, 4 ], "chance": 50 },
+        { "group": "AFS_GROUP_RUIN_MOXIE", "x": [ 0, 23 ], "y": [ 17, 23 ], "pack_size": [ 1, 2 ], "chance": 100 },
+        { "group": "AFS_GROUP_RUIN_MOXIE", "x": [ 24, 47 ], "y": [ 17, 23 ], "pack_size": [ 1, 2 ], "chance": 70 }
+      ],
+      "computers": {
+        "7": {
+          "name": "MALAMUTE REACTOR CONTROL",
+          "security": 5,
+          "options": [ { "name": "UNLOCK REACTOR DOORS", "action": "unlock" } ],
+          "failures": [ { "action": "shutdown" }, { "action": "alarm" } ]
+        },
+        "5": {
+          "name": "MALAMUTE ARMORY CONTROL",
+          "security": 3,
+          "options": [ { "name": "UNLOCK ARMORY DOORS", "action": "unlock" } ],
+          "failures": [ { "action": "shutdown" }, { "action": "alarm" } ]
+        }
+      }
+    }
+  },
+  {
+    "type": "mapgen",
+    "method": "json",
+    "om_terrain": [ [ "afs_freight_transport_roof_a1", "afs_freight_transport_roof_a2" ] ],
+    "object": {
+      "fill_ter": "t_metal_floor",
+      "rows": [
+        "                                                ",
+        "                                                ",
+        "                                                ",
+        "                                                ",
+        "                                                ",
+        "       .....  ....                              ",
+        "     ............... ... .....   .......        ",
+        "   ..&...................................       ",
+        "   .==A.....MM............===A.............     ",
+        "   ..&..............................MM.....     ",
+        "     .....................XX.........X.....     ",
+        "   ..&..............................MM.....     ",
+        "   .==A.....MM............===A.............     ",
+        "   ..&...................................       ",
+        "     ............... ... .....   .......        ",
+        "       .....  ....                              ",
+        "                                                ",
+        "                                                ",
+        "                                                ",
+        "                                                ",
+        "                                                ",
+        "                                                ",
+        "                                                ",
+        "                                                "
+      ],
+      "palettes": [ "roof_palette" ],
+      "terrain": { ".": "t_metal_floor" }
+    }
+  }
+]

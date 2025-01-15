@@ -1,4 +1,4 @@
-# practice
+# Practice Recipes
 
 Practice recipes allow practicing skills and proficiencies by working on crafts that are "just for
 practice", and do not yield a finished result (although they may have some byproducts). They may be
@@ -19,7 +19,7 @@ They:
 
 - must define `id`, `name`, `description` and `practice_data`
 - must not define a `result` or `difficulty`
-- may define `byproducts`
+- may define `byproducts` / `byproduct_group`
 
 The `practice_data` field is required for practice recipes, and must be defined. It is an object
 with its own fields, as follows:
@@ -44,7 +44,7 @@ work the same way.
 
 For example, here is a recipe for practicing intermediate level computer skill:
 
-```
+```json
 [
   {
     "id": "prac_computer_int",

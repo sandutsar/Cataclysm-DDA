@@ -1,4 +1,4 @@
-**Intermediate Mapgen Guide:**
+## Guide For Intermediate Mapgen
 
 This guide assumes you are comfortable with basic mapgen elements and adding regular mapgen.  It is meant as a supplement to the mapgen.md and overmap.md documents.
 
@@ -63,7 +63,7 @@ You’ll want to make some choices before adding nested maps.
 * If it is within a larger building, will you include doors/walls?
 * What size map do you need to make.
 
-A nested map gives you the ability to overwrite or fill in a portion of an existing mapgen.  The contents of the nested map entry can contain any entry within mapgen objects (excepting fill_ter).  This includes adding nested maps inside your nested map for extra variability.  
+A nested map gives you the ability to overwrite or fill in a portion of an existing mapgen.  The contents of the nested map entry can contain any entry within mapgen objects (excepting fill_ter).  This includes adding nested maps inside your nested map for extra variability.
 
 Example json entry for the nested map:
 
@@ -98,6 +98,7 @@ Example json entry for the nested map:
         "%": "t_carpet_green",
         "&": "t_carpet_green"
       },
+      "flags": [ "ERASE_ALL_BEFORE_PLACING_TERRAIN" ],
       "furniture": { "%": "f_arcade_machine", "=": "f_speaker_cabinet", "&": "f_pinball_machine" },
       "place_loot": [ { "item": "stereo", "x": 7, "y": 2, "chance": 100 }, { "item": "laptop", "x": 5, "y": 5, "chance": 60 } ]
     }
@@ -113,10 +114,12 @@ Note the ID is now `nested_mapgen_id` and the object uses a new entry `mapgensiz
 
 * `mapgensize`:  Nested mapgen can be any size from 1x1 to 24x24 but it must be square.  You don't have to use every row or column of the `rows` entry.  Any unused portions will fall back to the main mapgen.
 
+* `flags`:  More information about mapgen flags can be found in [doc/MAPGEN.md](https://github.com/CleverRaven/Cataclysm-DDA/blob/master/doc/MAPGEN.md#clearing-flags-for-layered-mapgens)
+
 * `terrain` & `furniture`:   Without `fill_ter`, you need to define every floor terrain under furniture.  If you don't it will fall back to the main mapgen's `fill_ter`.  In the above example, there's a green carpet in 1/2 the map and the rest picks up the floor of the mapgen (indoor concrete).  If you need to overwrite existing furniture in the main mapgen you can use a combination of `t_null` and `f_null` to override preexisting mapgen.
 
 _Tips:_
-If you're doing interior spaces, pay attention to door placement and access pathways.  
+If you're doing interior spaces, pay attention to door placement and access pathways.
 
 * For walled nests, I generally keep the doors in the center of the walls.
 * For open floor plan nests, I try to preserve the corner spaces for doors in the regular mapgen (if I can design the mapgen with the nests).
@@ -159,7 +162,7 @@ by using room and a compass direction, it quickly identifies the nest as having 
 
 **Debug testing:**
 
-So many nests, so hard to find ones to use!  
+So many nests, so hard to find ones to use!
 
 We've recently gotten the ability to spawn nested maps via debug in game and this is a huge help for making sure nests fit, don't conflict with elements in the existing maps and are oriented well without adjusting spawn weights to force the nest to spawn naturally.
 
@@ -176,9 +179,9 @@ You'll quickly see why it's good to use a coherent name format.
 
 **Mini nests:**
 
-Nests can be as small as one tile which is very useful if you want special or rare spawns for items, monsters, vehicles, NPCs or other elements.  
+Nests can be as small as one tile which is very useful if you want special or rare spawns for items, monsters, vehicles, NPCs or other elements.
 
-An example of a spawn for a particular loot group:  
+An example of a spawn for a particular loot group:
 These nests were used in a larger nest of a basement study.  I didn't want the study to offer all the magiclysm class books at once.  I made nests for each spell class item_group:
 
 3 1x1 nested maps that only include loot placement.  They feed into a larger nest.
@@ -229,21 +232,21 @@ Note the use of `t_null` in the majority of the map.  A lot of the map is unused
     "object": {
       "mapgensize": [ 13, 13 ],
       "rows": [
-        "mt_________#t",
-        "____________r",
-        "__________ffr",
-        "___________W_",
-        "_____________",
-        "_____________",
-        "_____________",
-        "_____________",
-        "_____________",
-        "_____________",
-        "_____________",
-        "_____________",
-        "_____________"
+        "mt         #t",
+        "            r",
+        "          ffr",
+        "           W ",
+        "             ",
+        "             ",
+        "             ",
+        "             ",
+        "             ",
+        "             ",
+        "             ",
+        "             ",
+        "             "
       ],
-      "terrain": { "_": "t_null", "-": "t_wall", "W": "t_window_boarded" },
+      "terrain": { "-": "t_wall", "W": "t_window_boarded" },
       "furniture": { "r": "f_rack", "f": "f_fridge", "t": "f_table", "#": "f_counter", "m": "f_makeshift_bed" },
       "place_npcs": [ { "class": "survivor_chef", "x": 5, "y": 1 } ],
       "place_loot": [
@@ -356,7 +359,7 @@ Currently, nested maps do not support z level linking, so any nested map you mak
 
 As the nested maps used in vanilla increase, modders can make use of these existing entries to incorporate their mod maps into existing buildings.  This should greatly expand the mod's ability to add its content into vanilla maps.  By using the same `nested mapgen id` and assigning a `weight` to both your new nest and existing nests (as needed).
 
-I recommend the modder take a look through existing maps and see if there is one that fits the same overall size, orientation, and spawning rarity that they would like their modded nest to have.  
+I recommend the modder take a look through existing maps and see if there is one that fits the same overall size, orientation, and spawning rarity that they would like their modded nest to have.
 You can search for the nested mapgen ids in the github to make sure its representation meets your needs.
 
 
@@ -460,7 +463,7 @@ The main mapgen and spawning your trap:
   }
   ```
 
-  I've placed the trap under a coat rack to dissuade casual triggering.  Note: when triggered, the trap will update the wall across the room with a beaded door entrance.  
+  I've placed the trap under a coat rack to dissuade casual triggering.  Note: when triggered, the trap will update the wall across the room with a beaded door entrance.
 
 
 **Merged maps**
@@ -482,99 +485,101 @@ om_terrain value:
     ]
 ```
 
-Each OMT's coordinates will continue the row and column numbers, they do not reset to 0,0 at each map boundary.  
+Each OMT's coordinates will continue the row and column numbers, they do not reset to 0,0 at each map boundary.
 
 For our farm the coordinates will be:
 * x sets:
-  *  first OMT: 0,23
-  * second OMT: 24,47
-  * third OMT: 48,71
-  * fourth OMT: 72,95
+  * first  OMT: 0, 23
+  * second OMT: 24, 47
+  * third  OMT: 48, 71
+  * fourth OMT: 72, 95
 
 * y sets:
-  * first row: 0,23
-  * second row: 24,47
-  * third row: 48,71
+  * first  row: 0, 23
+  * second row: 24, 47
+  * third  row: 48, 71
 
 
 The object entries rows reflect all the OMTs together and all the other object entries are shared across all the OMTs:
 
+<!-- {% raw %} -->
 ```
       "rows": [
-        " IFFFFFFFI,,,,IFFFFFFFIffffffffffffffff ,,,, ffffIFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFI ",
-        " F        ,,,,        F   ????  ????   P,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,        ,           F ",
-        " F $$$$$$$,,,,$$$$$$$ F   -ww-  -ww-    ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,DDDDDDDDDDDDDDDDDDD F ",
-        " F        ,,,,        F ---..----..---  ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,   ,                F ",
-        " F        ,,,,        F -x..........x-   ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,DDDDDDDDDDDDDDDDDDD F ",
-        " F $$$$$$$,,,,$$$$$$$ F -....hhhh....w   ?,?     I                    ,,,,                    F ",
-        " F        ,,,,        F w....tttt....-????,?     F DDDDDDDDDDDDDDDDDDD,,,,DDDDDDDDDDDDDDDDDDD,F ",
-        " F        ,,,,        F w....tttt....+,,,,,?     F     ,           Q  ,,,,    ,          ,    F ",
-        " F $$$$$$$,,,,$$$$$$$ F w....tttt...Y-??????     F DDDDDDDDDDDDDDDDDDD,,,,DDDDDDDDDDDDDDDDDDD F ",
-        " F        ,,,,        F -....hhhh....w           F,                   ,,,,           ,        F ",
-        " F        ,,,,        F -x..........x-   -ww-    F DDDDDDDDDDDDDDDDDDD,,,,DDDDDDDDDDDDDDDDDDD F ",
-        " F $$$$$$$,,,,$$$$$$$ F ----......--------HH---- F           ,        ,,,,                    F ",
-        " F        ,,,,        F -......................- F DDDDDDDDDDDDDDDDDDD,,,,DDDDDDDDDDDDDDDDDDD F ",
-        " F        ,,,,Q       F w.;;;;;;;;;;;;;;;;;;;;.w F                    ,,,,       ,        Q   F ",
-        " F $$$$$$$,,,,$$$$$$$ F -.....................x- F DDDDDDDDDDDDDDDDDDD,,,,DDDDDDDDDDDDDDDDDDD F ",
-        " F        ,,,,        F ---+-----+-----+-----+-- F     ,        ,     ,,,,                  , F ",
-        " F        ,,,,        F -iiiiu-H...-BB...kk-TiS- F DDDDDDDDDDDDDDDDDDD,,,,DDDDDDDDDDDDDDDDDDD F ",
-        " F $$$$$$$,,,,$$$$$$$ F -Siiiu-t...-.....h.-iii- F    ,               ,,,,            ,       F ",
-        " F        ,,,,        F woiiiu-H...-BB.....-iii- F DDDDDDDDDDDDDDDDDDD,,,,DDDDDDDDDDDDDDDDDDD F ",
-        " F        ,,,,        F -eiiiu-.BB.-.....h.-bbb- F                    ,,,,    ,               F ",
-        " F $$$$$$$,,,,$$$$$$$ F -iiiiu-.BBd-BBdddkk-bbb- F DDDDDDDDDDDDDDDDDDD,,,,DDDDDDDDDDDDDDDDDDD F ",
-        " F        ,,,,        F ---+----ww----ww-------- F,              ,    ,,,,                   ,F ",
-        " F        ,,,,        F    ,                     F DDDDDDDDDDDDDDDDDDD,,,,DDDDDDDDDDDDDDDDDDD F ",
-        " F $$$$$$$,,,,$$$$$$$ Iffff,fffffffffffffffffffffI        ,           ,,,,      ,             F ",
-        " F        ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,DDDDDDDDDDDDDDDDDDD F ",
-        " F        ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,   ,        Q       F ",
-        " F $$$$$$$,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,DDDDDDDDDDDDDDDDDDD F ",
-        " F        ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,           ,        F ",
-        " F        ,,,,        I          ,,     ,,,,,O   I DDDDDDDDDDDDDDDDDDD,,,,DDDDDDDDDDDDDDDDDDD F ",
-        " F $$$$$$$,,,,$$$$$$$ F #==#==#  ,,   ##MMMMM##  F         Q          ,,,,    ,              ,F ",
-        " F        ,,,,        F #L_q__#  ,, ? #E_____O#  F DDDDDDDDDDDDDDDDDDD,,,,DDDDDDDDDDDDDDDDDDD F ",
-        " F        ,,,,        F #L_q__# ,,,   #E______#  F                    ,,,,                    F ",
-        " F $$$$$$$,,,,$$$$$$$ F #L____# ,,   &#E______W  F DDDDDDDDDDDDDDDDDDD,,,,DDDDDDDDDDDDDDDDDDD F ",
-        " F        ,,,,        F #L_c__# ,,,,,,+_______#  F       ,            ,,,,          ,         F ",
-        " F        ,,,,        F ####### ,,   ?#l______#  F DDDDDDDDDDDDDDDDDDD,,,,DDDDDDDDDDDDDDDDDDD F ",
-        " F $$$$$$$,,,,$$$$$$$ F  ?      ,,    #l______W  F,             ,     ,,,,                    F ",
-        " F        ,,,,        F         ,,,   #l______#  F DDDDDDDDDDDDDDDDDDD,,,,DDDDDDDDDDDDDDDDDDD F ",
-        " F        ,,,,        F     ?    ,,   #_______#  F     ,              ,,,,   ,        ,       F ",
-        " F $$$$$$$,,,,$$$$$$$ F ?        ,,?  #########  F DDDDDDDDDDDDDDDDDDD,,,,DDDDDDDDDDDDDDDDDDD F ",
-        " F        ,,,,        F          ,,              F         ,          ,,,,                    F ",
-        " F        ,,,,        IFFFFFFFFFI,,IFFFFFFFFFFFFFI DDDDDDDDDDDDDDDDDDD,,,,DDDDDDDDDDDDDDDDDDD F ",
-        " F $$$$$$$,,,,$$$$$$$ f       ?  ,,     ?        f    ,           ,   ,,,,       ,            F ",
-        " F  Q     ,,,,        f  7   7   7,,  7   7   7  f DDDDDDDDDDDDDDDDDDD,,,,DDDDDDDDDDDDDDDDDDD F ",
-        " F        ,,,,        f ?       ? ,,        ?    f         ,          ,,,,                    F ",
-        " F $$$$$$$,,,,$$$$$$$ f  ,,,,,,,,,,,,,,,,,,,,,,  f DDDDDDDDDDDDDDDDDDD,,,,DDDDDDDDDDDDDDDDDDD F ",
-        " F        ,,,,        f           ,,             f           ,        ,,,,           Q        F ",
-        " F        ,,,,        f  7   7   7,,  7   7?  7  f DDDDDDDDDDDDDDDDDDD,,,,DDDDDDDDDDDDDDDDDDD F ",
-        " F $$$$$$$,,,,$$$$$$$ f      ?   ,,,   ?         f,                   ,,,,  ,           ,     F ",
-        " F        ,,,,        f  ,,,,,,,,,,,,,,,,,,,,,,  f DDDDDDDDDDDDDDDDDDD,,,,DDDDDDDDDDDDDDDDDDD F ",
-        " F        ,,,,        f   ?    ,,,             ? f         ,          ,,,,       ,           ,F ",
-        " F $$$$$$$,,,,$$$$$$$ f  7   7 ,,7 ?  7   7   7  f DDDDDDDDDDDDDDDDDDD,,,,DDDDDDDDDDDDDDDDDDD F ",
-        " F        ,,,,        f?     ? ,,          ?     f                    ,,,,                    F ",
-        " F        ,,,,        f  ,,,,,,,,,,,,,,,,,,,,,,  f DDDDDDDDDDDDDDDDDDD,,,,DDDDDDDDDDDDDDDDDDD F ",
-        " F $$$$$$$,,,,$$$$$$$ f        ,,       ?        f   ,           ,    ,,,,  ,          ,      F ",
-        " F        ,,,,        f  7   7 ,,7  ? 7   7   7  f DDDDDDDDDDDDDDDDDDD,,,,DDDDDDDDDDDDDDDDDDD F ",
-        " F        ,,,,        f        ,,              ? f                 ,  ,,,,                    F ",
-        " F $$$$$$$,,,,$$$$$$$ f  ,,,,,,,,,,,,,,,,,,,,,,  f DDDDDDDDDDDDDDDDDDD,,,,DDDDDDDDDDDDDDDDDDD F ",
-        " F        ,,,,        f    ?   ,,  ?             f,                   ,,,,    ,               F ",
-        " F        ,,,,        f  7   7 ,,7    7   7   7  f DDDDDDDDDDDDDDDDDDD,,,,DDDDDDDDDDDDDDDDDDD F ",
-        " F $$$$$$$,,,,$$$$$$$ f        ,,       ?        f   ,      ,         ,,,,  ,         ,       F ",
-        " F        ,,,,        f  ,,,,,,,,,,,,,,,,,,,,,,  f DDDDDDDDDDDDDDDDDDD,,,,DDDDDDDDDDDDDDDDDDD F ",
-        " F        ,,,,        f ?      ,,           ?    f        Q           ,,,,                    F ",
-        " F $$$$$$$,,,,$$$$$$$ f  7   7 ,,7    7   7   7  f DDDDDDDDDDDDDDDDDDD,,,,DDDDDDDDDDDDDDDDDDD F ",
-        " F        ,,,,        f        ,,,  ?           ?f                ,   ,,,,          ,        ,F ",
-        " F        ,,,,     Q  f  ,,,,,,,,,,,,,,,,,,,,,,  f DDDDDDDDDDDDDDDDDDD,,,,DDDDDDDDDDDDDDDDDDD F ",
-        " F $$$$$$$,,,,$$$$$$$ f    ?     ,,,         ?   f     ,       ,      ,,,,                    F ",
-        " F        ,,,,        f  7   7   7,,  7   7   7  f,DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD F ",
-        " F        ,,,,        f       ?  ,,,     ?       f                 ,     ,        ,     Q     F ",
-        " F $$$$$$$,,,,$$$$$$$ f  ,,,,,,,,,,,,,,,,,,,,,,  f DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD F ",
-        " F        ,,,,        f  ?       ,,              f             ,              ,           ,   F ",
-        " F                    f  7   7   7  ? 7   7   7  f DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD F ",
-        " IFFFFFFFFFFFFFFFFFFFFIFFFFFFFFFFFFFFFFFFFFFFFFFFIFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFI "
+        " ɅɅɅɅɅɅ ,,,  ,,, ɅɅɅɅɅɅ                p ,, ,,   ɅɅɅɅɅɅɅɅɅɅɅɅɅɅɅɅɅɅɅɅɅɅɅɅɅɅɅɅɅɅɅɅɅɅɅɅɅɅɅɅɅɅɅɅɅɅ ",
+        " Ʌ      ,,,  ,,,      ? [ ????  ???? [   ,, ,, [ ?……………………………………………………………………………………………………………………Ʌ ",
+        " Ʌ [    ,,,  ,,,      ?   #oo#  #oo#     ,, ,,   ?…                                          …Ʌ ",
+        " Ʌ      ,,,  ,,,      ? ###..####..###   ,, ,,   ?… $  $  $  $  $  $  $  $  $  $  $  $  $  $ …Ʌ ",
+        " Ʌ      ,,,  ,,,      ? #y...TxxT...y#   ,, ,,   ?… $  $  $  $  $  $  $  $  $  $  $  $  $  $ …Ʌ ",
+        " Ʌ      ,,,  ,,,      ? #............o   ,, ,,   ?… $  $  $  $  $  $  $  $  $  $  $  $  $  $ …Ʌ ",
+        " Ʌ      ,,,……,,, [    ? oH..E.##;;;..#,  ,, ,,   ?… $  $  $  $  $  $  $  $  $  $  $  $  $  $ …Ʌ ",
+        " Ʌ   ………,,,,,,,,      ? oH.l..k#;;;..*,,,,, ,,…………… $  $  $  $  $  $  $  $  $  $  $  $  $  $ …Ʌ ",
+        " Ʌ  ……,,,,,,,,,,      ? oH..E.##;;;.L#,  ,, ,,   ?… $  $  $  $  $  $  $  $  $  $  $  $  $  $ …Ʌ ",
+        " Ʌ  …,,,,,,,,,,,    [ ? #............o           ?… $  $  $  $  $  $  $  $  $  $  $  $  $  $ …Ʌ ",
+        " Ʌ  …,,,,,,,,,,,      ? #yRR......RRy#   #oo# ^  ?… $  $  $  $  $  $  $  $  $  $  $  $  $  $ …Ʌ ",
+        " Ʌ ……,,,,,,,,,,,  X   ? #|||......|||#####HH#### ?… $  $  $  $  $  $  $  $  $  $  $  $  $  $ …Ʌ ",
+        " Ʌ …,,,,,,,,,,,,      ? #i..........yxxxT|...rr# ?… $  $  $  $  $  $  $  $  $  $  $  $  $  $ …Ʌ ",
+        " Ʌ …,,,,,,,,,,,,    j ? oi...............|...Ero ?… $  $  $  $  $  $  $  $  $  $  $  $  $  $ …Ʌ ",
+        " Ʌ …,,,,,,,,,,,,    j ? #y...............|PP..T# ?… $  $  $  $  $  $  $  $  $  $  $  $  $  $ …Ʌ ",
+        " Ʌ …,,,,,,,,,,,,    j ? #||+|||..;;hffh;;||||+|# ?… $  $  $  $  $  $  $  $  $  $  $  $  $  $ …Ʌ ",
+        " Ʌ …,,,,,,,,,,,,      ? #J````1..;;hffh;;.....<# ?… $  $  $  $  $  $  $  $  $  $  $  $  $  $ …Ʌ ",
+        " Ʌ …,,,,,,,,,,,,     [? #5````3A.;;hffh;;.E||+|# ?… $  $  $  $  $  $  $  $  $  $  $  $  $  $ …Ʌ ",
+        " Ʌ …,,,,,,,,,,,,      ? oO````JA.;;hffh;;.y|t``# ?… $  $  $  $  $  $  $  $  $  $  $  $  $  $ …Ʌ ",
+        " Ʌ …,,,,,,,,,,,,  [   ? #J````2A.;;hffh;;.E|```# ?… $  $  $  $  $  $  $  $  $  $  $  $  $  $ …Ʌ ",
+        " Ʌ …,,,,,,,,,,,,      ? #66``47...........T|8S8# ?… $  $  $  $  $  $  $  $  $  $  $  $  $  $ …Ʌ ",
+        " Ʌ …,,,,,,,,,,,,…     ? ###*####oo####oo#####o## ?… $  $  $  $  $  $  $  $  $  $  $  $  $  $ …Ʌ ",
+        " Ʌ …,,,,,,,,,,,,……    ?    ,#♣#                  ?… $  $  $  $  $  $  $  $  $  $  $  $  $  $ …Ʌ ",
+        " Ʌ ……,,,,,,,,,,,,……   ?????,,,????????????????????… $  $  $  $  $  $  $  $  $  $  $  $  $  $ …Ʌ ",
+        " Ʌ  …,,,,,,,,,,,,,……………………………………………………………………………………… $  $  $  $  $  $  $  $  $  $  $  $  $  $ …Ʌ ",
+        " Ʌ  ……,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,… $  $  $  $  $  $  $  $  $  $  $  $  $  $ …Ʌ ",
+        " Ʌ   ………,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,… $  $  $  $  $  $  $  $  $  $  $  $  $  $ …Ʌ ",
+        " Ʌ     …………………,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,… $  $  $  $  $  $  $  $  $  $  $  $  $  $ …Ʌ ",
+        " Ʌ       …………………………………………………………………………………,,,,,}…………… $  $  $  $  $  $  $  $  $  $  $  $  $  $ …Ʌ ",
+        " Ʌ???????………………???????? #==#==#   ,   ##{{{{{##  ?… $  $  $  $  $  $  $  $  $  $  $  $  $  $ …Ʌ ",
+        " Ʌ……………………………………………………? #‡_±__#   ,   #(_____}#  ?… $  $  $  $  $  $  $  $  $  $  $  $  $  $ …Ʌ ",
+        " Ʌ…                  …? #‡_±_0#   ,   #(______#  ?… $  $  $  $  $  $  $  $  $  $  $  $  $  $ …Ʌ ",
+        " Ʌ… $$$$$$$$$$$$$$$$ …? #‡___0#   ,  &#(______]  ?… $  $  $  $  $  $  $  $  $  $  $  $  $  $ …Ʌ ",
+        " Ʌ…                  …? #‡_Ŧ__#   ,,,,*_______#  ?… $  $  $  $  $  $  $  $  $  $  $  $  $  $ …Ʌ ",
+        " Ʌ…                  …? #######   ,   #-______#  ?… $  $  $  $  $  $  $  $  $  $  $  $  $  $ …Ʌ ",
+        " Ʌ… $$$$$$$$$$$$$$$$ …?           ,   #-______]  ?… $  $  $  $  $  $  $  $  $  $  $  $  $  $ …Ʌ ",
+        " Ʌ…                  …?           ,   #-______#  ?… $  $  $  $  $  $  $  $  $  $  $  $  $  $ …Ʌ ",
+        " Ʌ…                  …?           ,   #_______#  ?… $  $  $  $  $  $  $  $  $  $  $  $  $  $ …Ʌ ",
+        " Ʌ… $$$$$$$$$$$$$$$$ …?           ,   #########  ?… $  $  $  $  $  $  $  $  $  $  $  $  $  $ …Ʌ ",
+        " Ʌ…                  …?           ,              ?… $  $  $  $  $  $  $  $  $  $  $  $  $  $ …Ʌ ",
+        " Ʌ…                  …????????????,???????????????… $  $  $  $  $  $  $  $  $  $  $  $  $  $ …Ʌ ",
+        " Ʌ… $$$$$$$$$$$$$$$$ …?           ,              ?… $  $  $  $  $  $  $  $  $  $  $  $  $  $ …Ʌ ",
+        " Ʌ…                  …?  [   [   [,   [   [   [  ?… $  $  $  $  $  $  $  $  $  $  $  $  $  $ …Ʌ ",
+        " Ʌ…                  …?           ,              ?… $  $  $  $  $  $  $  $  $  $  $  $  $  $ …Ʌ ",
+        " Ʌ… $$$$$$$$$$$$$$$$ …?  ,,,,,,,,,,,,,,,,,,,,,,  ?… $  $  $  $  $  $  $  $  $  $  $  $  $  $ …Ʌ ",
+        " Ʌ…                  …?           ,              ?… $  $  $  $  $  $  $  $  $  $  $  $  $  $ …Ʌ ",
+        " Ʌ…                  …?  [   [   [,   [   [   [  ?… $  $  $  $  $  $  $  $  $  $  $  $  $  $ …Ʌ ",
+        " Ʌ… $$$$$$$$$$$$$$$$ …?           ,              ?… $  $  $  $  $  $  $  $  $  $  $  $  $  $ …Ʌ ",
+        " Ʌ…                  …?  ,,,,,,,,,,,,,,,,,,,,,,  ?… $  $  $  $  $  $  $  $  $  $  $  $  $  $ …Ʌ ",
+        " Ʌ…                  …?           ,              ?… $  $  $  $  $  $  $  $  $  $  $  $  $  $ …Ʌ ",
+        " Ʌ… $$$$$$$$$$$$$$$$ …?  [   [   [,   [   [   [  ?… $  $  $  $  $  $  $  $  $  $  $  $  $  $ …Ʌ ",
+        " Ʌ…                  …?           ,              ?… $  $  $  $  $  $  $  $  $  $  $  $  $  $ …Ʌ ",
+        " Ʌ…                  …?  ,,,,,,,,,,,,,,,,,,,,,,  ?… $  $  $  $  $  $  $  $  $  $  $  $  $  $ …Ʌ ",
+        " Ʌ… $$$$$$$$$$$$$$$$ …?           ,              ?… $  $  $  $  $  $  $  $  $  $  $  $  $  $ …Ʌ ",
+        " Ʌ…                  …?  [   [   [,   [   [   [  ?… $  $  $  $  $  $  $  $  $  $  $  $  $  $ …Ʌ ",
+        " Ʌ…                  …?           ,              ?… $  $  $  $  $  $  $  $  $  $  $  $  $  $ …Ʌ ",
+        " Ʌ… $$$$$$$$$$$$$$$$ …?  ,,,,,,,,,,,,,,,,,,,,,,  ?… $  $  $  $  $  $  $  $  $  $  $  $  $  $ …Ʌ ",
+        " Ʌ…                  …?           ,              ?… $  $  $  $  $  $  $  $  $  $  $  $  $  $ …Ʌ ",
+        " Ʌ…                  …?  [   [   [,   [   [   [  ?… $  $  $  $  $  $  $  $  $  $  $  $  $  $ …Ʌ ",
+        " Ʌ… $$$$$$$$$$$$$$$$ …?           ,              ?… $  $  $  $  $  $  $  $  $  $  $  $  $  $ …Ʌ ",
+        " Ʌ…                  …?  ,,,,,,,,,,,,,,,,,,,,,,  ?… $  $  $  $  $  $  $  $  $  $  $  $  $  $ …Ʌ ",
+        " Ʌ…                  …?           ,              ?… $  $  $  $  $  $  $  $  $  $  $  $  $  $ …Ʌ ",
+        " Ʌ… $$$$$$$$$$$$$$$$ …?  [   [   [,   [   [   [  ?… $  $  $  $  $  $  $  $  $  $  $  $  $  $ …Ʌ ",
+        " Ʌ…                  …?           ,              ?… $  $  $  $  $  $  $  $  $  $  $  $  $  $ …Ʌ ",
+        " Ʌ…                  …?  ,,,,,,,,,,,,,,,,,,,,,,  ?… $  $  $  $  $  $  $  $  $  $  $  $  $  $ …Ʌ ",
+        " Ʌ… $$$$$$$$$$$$$$$$ …?           ,              ?… $  $  $  $  $  $  $  $  $  $  $  $  $  $ …Ʌ ",
+        " Ʌ…                  …?  [   [   [,   [   [   [  ?… $  $  $  $  $  $  $  $  $  $  $  $  $  $ …Ʌ ",
+        " Ʌ…                  …?           ,              ?… $  $  $  $  $  $  $  $  $  $  $  $  $  $ …Ʌ ",
+        " Ʌ… $$$$$$$$$$$$$$$$ …?  ,,,,,,,,,,,,,,,,,,,,,,  ?… $  $  $  $  $  $  $  $  $  $  $  $  $  $ …Ʌ ",
+        " Ʌ…                  …?                          ?…                                          …Ʌ ",
+        " Ʌ……………………………………………………?  [   [   [    [   [   [  ?……………………………………………………………………………………………………………………Ʌ ",
+        " ɅɅɅɅɅɅɅɅɅɅɅɅɅɅɅɅɅɅɅɅɅɅɅɅɅɅɅɅɅɅɅɅɅɅɅɅɅɅɅɅɅɅɅɅɅɅɅɅɅɅɅɅɅɅɅɅɅɅɅɅɅɅɅɅɅɅɅɅɅɅɅɅɅɅɅɅɅɅɅɅɅɅɅɅɅɅɅɅɅɅɅɅɅɅ "
       ],
 ```
+<!-- {% endraw %} -->
 
 Important note about spawning items, vehicles and monsters:
 
@@ -582,17 +587,17 @@ While these maps are merged for the benefit of readability, this isn't automatic
 
 An example:  each x coordinate encompasses one OMT from a segment of the mall.
 ```
-"place_monsters": [
-        { "monster": "GROUP_MALL", "x": [ 2, 23 ], "y": [ 2, 23 ], "density": 0.15 },
-        { "monster": "GROUP_MALL", "x": [ 26, 47 ], "y": [ 2, 23 ], "density": 0.3 },
-        { "monster": "GROUP_MALL", "x": [ 49, 71 ], "y": [ 2, 10 ], "density": 0.2 },
-        { "monster": "GROUP_MALL", "x": [ 56, 68 ], "y": [ 17, 21 ], "density": 0.1 },
-        { "monster": "GROUP_MALL", "x": [ 73, 95 ], "y": [ 2, 10 ], "density": 0.2 },
-        { "monster": "GROUP_MALL", "x": [ 73, 95 ], "y": [ 17, 19 ], "density": 0.1 },
-        { "monster": "GROUP_MALL", "x": [ 98, 119 ], "y": [ 0, 11 ], "density": 0.2 },
-        { "monster": "GROUP_MALL", "x": [ 96, 105 ], "y": [ 16, 21 ], "density": 0.1 },
-        { "monster": "GROUP_MALL", "x": [ 170, 191 ], "y": [ 2, 23 ], "density": 0.1 },
-        { "monster": "GROUP_MALL", "x": [ 194, 215 ], "y": [ 2, 23 ], "density": 0.05 }
+"place_monster": [
+        { "group": "GROUP_MALL", "x": [ 2, 23 ], "y": [ 2, 23 ], "repeat": [ 2, 4 ] },
+        { "group": "GROUP_MALL", "x": [ 26, 47 ], "y": [ 2, 23 ], "repeat": [ 4, 8 ] },
+        { "group": "GROUP_MALL", "x": [ 49, 71 ], "y": [ 2, 10 ], "repeat": [ 4, 6 ] },
+        { "group": "GROUP_MALL", "x": [ 56, 68 ], "y": [ 17, 21 ], "repeat": [ 2, 4 ] },
+        { "group": "GROUP_MALL", "x": [ 73, 95 ], "y": [ 2, 10 ], "repeat": [ 4, 6 ] },
+        { "group": "GROUP_MALL", "x": [ 73, 95 ], "y": [ 17, 19 ], "repeat": [ 2, 4 ] },
+        { "group": "GROUP_MALL", "x": [ 98, 119 ], "y": [ 0, 11 ], "repeat": [ 4, 6 ] },
+        { "group": "GROUP_MALL", "x": [ 96, 105 ], "y": [ 16, 21 ], "repeat": [ 2, 4 ] },
+        { "group": "GROUP_MALL", "x": [ 170, 191 ], "y": [ 2, 23 ], "repeat": [ 2, 4 ] },
+        { "group": "GROUP_MALL", "x": [ 194, 215 ], "y": [ 2, 23 ], "repeat": [ 1, 3 ] }
       ]
 ```
 
